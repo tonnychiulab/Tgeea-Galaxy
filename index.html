@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TGEEA 性別議題星系圖</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="header">
+    <div id="title-block">
+      <h1>🌌 TGEEA 性別議題星系圖</h1>
+      <p>台灣性別平等教育協會 · 議題交織探索地圖</p>
+    </div>
+
+    <div id="search-wrap">
+      <input id="search" type="search" placeholder="搜尋議題…" autocomplete="off" autocorrect="off">
+    </div>
+
+    <!-- 手機上收折的圖例 toggle -->
+    <button id="legend-toggle" aria-expanded="false" aria-controls="legend">
+      <span id="legend-toggle-label">分類篩選</span>
+      <span id="legend-arrow">▾</span>
+    </button>
+    <div id="legend" aria-label="分類圖例" hidden></div>
+  </div>
+
+  <div id="svg-container">
+    <svg id="main-svg" aria-label="性別議題星系圖"></svg>
+  </div>
+
+  <div id="tooltip" role="tooltip" aria-live="polite"></div>
+
+  <div id="info-panel">
+    <span class="desktop-only">🖱️ 拖曳節點・滾輪縮放・點擊節點查看關聯</span>
+    <span class="mobile-only">👆 拖曳節點・雙指縮放・點擊查看關聯</span>
+  </div>
+
+  <button id="reset-btn">↺ 重置視角</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

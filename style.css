@@ -1,0 +1,346 @@
+/* ============================================================
+   TGEEA Galaxy — style.css
+   RWD breakpoints: mobile < 600px | tablet 600-960px | desktop > 960px
+   ============================================================ */
+
+/* ── Reset & base ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a14;
+  color: #e8e8f0;
+  font-family: 'Noto Sans TC', 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none; /* let D3 handle all touch */
+}
+
+/* ── Header ── */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 14px 20px 10px;
+  background: linear-gradient(to bottom, rgba(10,10,20,0.97) 60%, transparent);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+#title-block h1 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f0e8ff;
+  white-space: nowrap;
+}
+#title-block p {
+  font-size: 0.68rem;
+  color: #7777aa;
+  margin-top: 1px;
+}
+
+/* ── Search ── */
+#search-wrap { flex-shrink: 0; }
+
+#search {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 7px 14px;
+  color: #e8e8f0;
+  font-size: 0.82rem;
+  width: 180px;
+  outline: none;
+  transition: border-color 0.2s, width 0.3s;
+  /* remove browser default search clear button */
+  -webkit-appearance: none;
+}
+#search::placeholder { color: #555577; }
+#search:focus {
+  border-color: rgba(200,150,255,0.5);
+  width: 220px;
+}
+
+/* ── Legend toggle button (visible on mobile) ── */
+#legend-toggle {
+  display: none; /* hidden on desktop */
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 6px 14px;
+  color: #c0b0e8;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+#legend-toggle:hover { background: rgba(255,255,255,0.12); }
+#legend-arrow { transition: transform 0.25s; display: inline-block; }
+#legend-toggle[aria-expanded="true"] #legend-arrow { transform: rotate(180deg); }
+
+/* ── Legend panel ── */
+#legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+/* When hidden attribute set (mobile collapsed state) */
+#legend[hidden] { display: none !important; }
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  color: #aaaacc;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  transition: background 0.2s, opacity 0.2s, border-color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+.legend-item:hover { background: rgba(255,255,255,0.07); }
+.legend-item.active { border-color: rgba(255,255,255,0.2); }
+.legend-item.dimmed { opacity: 0.3; }
+
+.legend-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── SVG container ── */
+#svg-container {
+  position: fixed;
+  inset: 0;
+}
+svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── Graph elements ── */
+.link {
+  stroke-opacity: 0.22;
+  transition: stroke-opacity 0.25s, stroke-width 0.25s;
+}
+.link.highlighted {
+  stroke-opacity: 0.85;
+}
+.link.dimmed {
+  stroke-opacity: 0.03;
+}
+
+.node { cursor: pointer; }
+.node circle {
+  transition: filter 0.2s, opacity 0.25s;
+}
+.node:hover circle { filter: brightness(1.5) drop-shadow(0 0 6px currentColor); }
+.node.dimmed circle { opacity: 0.1; }
+.node.dimmed text  { opacity: 0.08; }
+
+.node text {
+  pointer-events: none;
+  font-size: 11px;
+  fill: #ddd;
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: rgba(10,10,20,0.85);
+  stroke-width: 3px;
+  font-weight: 500;
+  user-select: none;
+}
+.node.hub text {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #fff;
+}
+
+/* ── Tooltip ── */
+#tooltip {
+  position: fixed;
+  background: rgba(16,12,28,0.96);
+  border: 1px solid rgba(180,140,255,0.28);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  max-width: 230px;
+  z-index: 300;
+  line-height: 1.6;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.tip-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #f0e0ff;
+  margin-bottom: 3px;
+}
+.tip-cat {
+  font-size: 0.7rem;
+  opacity: 0.7;
+  margin-bottom: 5px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.tip-desc { color: #aaaacc; line-height: 1.55; }
+.tip-links {
+  margin-top: 8px;
+  font-size: 0.7rem;
+  color: #7777aa;
+}
+
+/* ── Info panel ── */
+#info-panel {
+  position: fixed;
+  bottom: 20px; left: 20px;
+  background: rgba(16,12,28,0.82);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font-size: 0.72rem;
+  color: #6666aa;
+  line-height: 1.7;
+  pointer-events: none;
+}
+
+/* ── Reset button ── */
+#reset-btn {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  background: rgba(140, 80, 240, 0.15);
+  border: 1px solid rgba(160,100,255,0.3);
+  border-radius: 20px;
+  color: #c0a0ff;
+  padding: 8px 18px;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: none;
+  z-index: 100;
+}
+#reset-btn:hover { background: rgba(160,100,255,0.28); }
+
+/* ── Responsive helpers ── */
+.mobile-only  { display: none; }
+.desktop-only { display: inline; }
+
+/* ============================================================
+   TABLET  (600px – 959px)
+   ============================================================ */
+@media (max-width: 959px) {
+  #title-block p { display: none; }
+  #search { width: 150px; }
+  #search:focus { width: 180px; }
+  #legend { gap: 6px; }
+  .legend-item { font-size: 0.68rem; padding: 3px 8px; }
+}
+
+/* ============================================================
+   MOBILE  (< 600px)
+   ============================================================ */
+@media (max-width: 599px) {
+  #header {
+    padding: 10px 14px 8px;
+    gap: 8px;
+    /* stack: title row / search+toggle row / legend row */
+    display: grid;
+    grid-template-areas:
+      "title title"
+      "search toggle"
+      "legend legend";
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+
+  #title-block {
+    grid-area: title;
+  }
+  #title-block h1 { font-size: 0.95rem; }
+
+  #search-wrap {
+    grid-area: search;
+  }
+  #search {
+    width: 100%;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  #search:focus { width: 100%; }
+
+  #legend-toggle {
+    grid-area: toggle;
+    display: flex; /* show on mobile */
+  }
+
+  #legend {
+    grid-area: legend;
+    margin-left: 0;
+    /* When visible, show as full-width dropdown */
+    width: 100%;
+    flex-direction: column;
+    background: rgba(16,12,28,0.97);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    gap: 6px;
+  }
+  #legend:not([hidden]) { display: flex; }
+
+  .legend-item {
+    font-size: 0.78rem;
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .legend-dot { width: 10px; height: 10px; }
+
+  /* Tooltip: bottom sheet on mobile */
+  #tooltip {
+    bottom: 0; left: 0; right: 0;
+    top: auto !important;
+    max-width: 100%;
+    border-radius: 14px 14px 0 0;
+    padding: 16px 20px 24px;
+    transform: none !important;
+    font-size: 0.88rem;
+  }
+
+  #info-panel {
+    bottom: auto; top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 72px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    padding: 7px 14px;
+  }
+
+  #reset-btn {
+    bottom: 16px; right: 16px;
+    padding: 9px 18px;
+    font-size: 0.82rem;
+  }
+
+  .mobile-only  { display: inline; }
+  .desktop-only { display: none; }
+
+  /* Larger tap targets for nodes */
+  .node circle { stroke-width: 2px; }
+}
